@@ -42,6 +42,7 @@ export default function MedicationScanner({
   }, [permission, requestPermission]);
 
   const handleScan = useCallback(async () => {
+    console.log("🔴🔴🔴 SCAN BUTTON PRESSED! 🔴🔴🔴");
     if (isProcessing) return;
     setIsProcessing(true);
 
@@ -64,6 +65,7 @@ export default function MedicationScanner({
       if (!imageUri) throw new Error("No image URI provided");
 
       // OCR processing
+      console.log("🔵 Starting OCR processing...");
       const { fullText } = await recognizeTextFromImage(imageUri);
       console.log("📷 Extracted text from camera:", fullText);
       if (onRawText) onRawText(fullText);
@@ -80,31 +82,39 @@ export default function MedicationScanner({
   }, [isProcessing, testImageUri, onRawText, onResult, onCancel, autoCloseOnResult]);
 
   const handlePickImage = useCallback(async () => {
+    console.log("🟢🟢🟢 CHOOSE PHOTO BUTTON PRESSED! 🟢🟢🟢");
     if (isProcessing) return;
 
     try {
       // Request media library permissions
+      console.log("📱 Requesting photo library permission...");
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== "granted") {
-        console.warn("Media library permission denied");
+        console.warn("❌ Media library permission denied");
         return;
       }
 
       // Launch image picker
+      console.log("✅ Permission granted. Opening image picker...");
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: false,
         quality: 0.7,
       });
 
-      if (result.canceled) return;
+      if (result.canceled) {
+        console.log("⏭️  User canceled image selection");
+        return;
+      }
 
       const imageUri = result.assets[0]?.uri;
       if (!imageUri) return;
 
+      console.log("🖼️  Image selected:", imageUri);
       setIsProcessing(true);
 
       // OCR processing
+      console.log("🔵 Starting OCR processing...");
       const { fullText } = await recognizeTextFromImage(imageUri);
       console.log("📸 Extracted text from photo:", fullText);
       if (onRawText) onRawText(fullText);

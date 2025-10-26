@@ -15,22 +15,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Request models
-class Dosage(BaseModel):
-    amount: float
-    unit: str
-    formatted: str
-
-class Medication(BaseModel):
+# Request models - simplified input
+class MedicationInput(BaseModel):
     name: str
-    dosage: Optional[Dosage] = None
-    brandName: Optional[str] = None
-    genericName: Optional[str] = None
-    confidence: str
+    dosage: str  # Simple string like "500mg"
 
 class MedicationScanRequest(BaseModel):
-    medications: List[Medication]
-    fullText: str
+    medications: List[MedicationInput]
 
 # Single drug info endpoint (existing)
 @app.get("/drug_info")
@@ -43,33 +34,28 @@ def process_scanned_medications(request: MedicationScanRequest):
     """
     Process medications scanned from label.
     Returns enriched information for each medication.
+    
+    Input: { medications: [{ name: "Ibuprofen", dosage: "200mg" }] }
+    Output: Enriched data with OpenFDA info + LLM summary
     """
     results = []
     
     for med in request.medications:
-        # Use generic name if available, otherwise use name
-        drug_name = med.genericName if med.genericName else med.name
-        dosage_str = med.dosage.formatted if med.dosage else ""
-        
         # Fetch drug info from OpenFDA
-        drug_data = fetch_drug_info(drug_name, dosage_str)
+        drug_data = fetch_drug_info(med.name, med.dosage)
         
-        # Combine scanned data with fetched data
+        # Return both the input and enriched data
         results.append({
-            "scanned": {
+            "input": {
                 "name": med.name,
-                "dosage": dosage_str,
-                "brandName": med.brandName,
-                "genericName": med.genericName,
-                "confidence": med.confidence
+                "dosage": med.dosage
             },
             "drugInfo": drug_data
         })
     
     return {
         "count": len(results),
-        "medications": results,
-        "originalText": request.fullText
+        "medications": results
     }
 
 if __name__ == "__main__":

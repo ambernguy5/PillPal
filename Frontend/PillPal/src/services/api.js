@@ -11,7 +11,7 @@ const API_BASE_URL = 'http://127.0.0.1:8000';
  */
 export async function sendMedicationsToBackend(scanData) {
   try {
-    console.log('📤 Sending medications to backend:', scanData);
+    console.log('📤 Sending medications to backend:', JSON.stringify(scanData, null, 2));
     
     const response = await fetch(`${API_BASE_URL}/medications/scan`, {
       method: 'POST',
@@ -22,7 +22,16 @@ export async function sendMedicationsToBackend(scanData) {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      // Try to get detailed error message from backend
+      let errorDetails = `HTTP ${response.status}`;
+      try {
+        const errorData = await response.json();
+        console.error('❌ Backend error details:', errorData);
+        errorDetails = errorData.detail || JSON.stringify(errorData);
+      } catch (e) {
+        console.error('❌ Could not parse error response');
+      }
+      throw new Error(errorDetails);
     }
 
     const data = await response.json();
@@ -34,6 +43,7 @@ export async function sendMedicationsToBackend(scanData) {
     };
   } catch (error) {
     console.error('❌ Error sending medications to backend:', error);
+    console.error('❌ Error details:', error.message);
     return {
       success: false,
       error: error.message
