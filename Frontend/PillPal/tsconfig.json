@@ -1,17 +1,24 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true,
+    "strict": true,              // enable strict type checking
+    "allowJs": true,             // allow JavaScript files
+    "jsx": "react-jsx",          // use React 17+ JSX transform
+    "noEmit": true,              // don't output compiled files
+    "baseUrl": ".",              // base path for module resolution
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]             // alias for imports
     }
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-, "src/services/mlkit/textRecognition.js"  ]
+    "src/**/*",                  // all TS/JS files in src
+    "app/**/*",                  // all TS/JS files in app
+    ".expo/types/**/*.ts",       // Expo types
+    "expo-env.d.ts"              // environment declarations
+  ],
+  "exclude": [
+    "node_modules",              // don’t check dependencies
+    "babel.config.js",
+    "metro.config.js"
+  ]
 }
