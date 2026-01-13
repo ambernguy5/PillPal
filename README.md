@@ -29,7 +29,7 @@ PillPal is a mobile health application for medication management and safety, des
 * APIs: Google Vision API, openFDA Drug Label API
 
 
-## 📁 Architecture (High-Level)
+## Architecture (High-Level)
 ```src/
 ├── components/        # Scanner + UI
 ├── utils/             # OCR parsing & helpers
