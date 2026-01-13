@@ -15,7 +15,7 @@ PillPal is a mobile health application for medication management and safety, des
 * Extracts generic name + strength from noisy OCR text
 * Deduplicates and ranks candidates
 
-## 🧠 Who It's For
+## Who It's For
 
 * Patients with extensive list of medications
 * Chronic illness populations
@@ -30,11 +30,12 @@ PillPal is a mobile health application for medication management and safety, des
 
 
 ## 📁 Architecture (High-Level)
-src/
+```src/
 ├── components/        # Scanner + UI
 ├── utils/             # OCR parsing & helpers
 ├── services/          # openFDA queries
 app/                   # Expo Router screens
+```
 
 🔍 Example FDA Query
 https://api.fda.gov/drug/label.json
