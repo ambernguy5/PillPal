@@ -2,48 +2,34 @@
 
 PillPal is a mobile health application for medication management and safety, designed for users managing complex drug regimens. The app consists of label scanning, drug normalization, and FDA-verified data lookup to reduce medication errors.
 
-What It Does
-Scan medication labels using camera or uploaded image
+## How It Works
+* Scan medication labels using camera or uploaded image
+* OCR → structured drug name + dosage
 
-OCR → structured drug name + dosage
+## Query FDA drug data
 
-🔎 Query FDA drug data
+* Uses openFDA Drug Label API
+* Returns indications, warnings, manufacturer, and dosage info
 
-Uses openFDA Drug Label API
+## Normalize real-world labels
+* Extracts generic name + strength from noisy OCR text
+* Deduplicates and ranks candidates
 
-Returns indications, warnings, manufacturer, and dosage info
+## 🧠 Who It's For
 
-🧠 Normalize real-world labels
+* Patients with extensive list of medications
+* Chronic illness populations
 
-Extracts generic name + strength from noisy OCR text
+## Tech Stack
 
-Deduplicates and ranks candidates
+* Frontend: React Native, Expo Router
 
-🧠 Who It's For
+* OCR & Image Processing: Image-based OCR pipeline (Google Vision API)
 
-Medication errors disproportionately affect:
-
-Patients with polypharmacy
-
-Chronic illness populations
-
-Elderly and immunocompromised users
-
-PillPal prioritizes generic drug identification, explainability, and FDA-verified sources to support safer medication decisions.
-
-🛠️ Tech Stack
-
-Frontend: React Native, Expo Router
-
-OCR & Image Processing: Image-based OCR pipeline (Google Vision API)
-
-APIs
-Google Vision API
-openFDA Drug Label API
+* APIs: Google Vision API, openFDA Drug Label API
 
 
-
-📁 Architecture (High-Level)
+## 📁 Architecture (High-Level)
 src/
 ├── components/        # Scanner + UI
 ├── utils/             # OCR parsing & helpers
