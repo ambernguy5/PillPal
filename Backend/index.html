@@ -1,0 +1,50 @@
+
+<!-- local testing -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Drug Info Test</title>
+</head>
+<body>
+    <h1>Drug Info Test</h1>
+    <label>Drug Name:</label>
+    <input type="text" id="drugName" value="ibuprofen"><br><br>
+    <label>Dosage:</label>
+    <input type="text" id="dosage" value="200mg"><br><br>
+    <button onclick="getDrugInfo()">Get Info</button>
+    <pre id="output"></pre>
+
+    <script>
+        async function getDrugInfo() {
+            const name = document.getElementById("drugName").value;
+            const dosage = document.getElementById("dosage").value;
+            const output = document.getElementById("output");
+            output.textContent = "Loading...";
+
+            try {
+                const res = await fetch(`http://127.0.0.1:8000/drug_info?name=${encodeURIComponent(name)}&dosage=${encodeURIComponent(dosage)}`);
+                const data = await res.json();
+
+                if (data.error) {
+                    output.textContent = "Error: " + data.error;
+                    return;
+                }
+
+                // Display the Claude summary directly if available
+                if (data.summary) {
+                    output.textContent = data.summary;
+                } else {
+                    // Fallback: display raw lists
+                    output.textContent =
+                        "Do not take if:\n" + (data.do_not_take_if_raw.join("\n") || "No data") +
+                        "\n\nDo not take with:\n" + (data.do_not_take_with_raw.join("\n") || "No data");
+                }
+
+            } catch (err) {
+                output.textContent = "Fetch Error: " + err;
+            }
+        }
+    </script>
+</body>
+</html>
