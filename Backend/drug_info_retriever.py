@@ -41,7 +41,6 @@ def fetch_drug_info(drug_name: str, dosage: str = "", use_llm_summary: bool = Tr
         resp = requests.get(base_url, params=params, timeout=10)
         resp.raise_for_status()
         data = resp.json()
-        
         if "results" not in data:
             print(f"   ❌ No results found for '{drug_name}'")
             return {"error": "No results found", "searched_for": drug_name}
@@ -207,11 +206,7 @@ def fetch_drug_info(drug_name: str, dosage: str = "", use_llm_summary: bool = Tr
         }
 
     except requests.exceptions.RequestException as e:
-        print(f"   ❌ OpenFDA API error: {str(e)}")
-        return {
-            "error": str(e),
-            "searched_for": drug_name
-        }
+        return {"error": str(e)}
 
 
 # -----------------------
